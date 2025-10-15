@@ -1,0 +1,83 @@
+GitHub
+
+master => develop => feat
+- 마스터를 디벨롭으로 카피 뜨고, 디벨롭에서 개발을 할 것이다.
+- feat에서 기능 개발하고 develop에 합치는 일을 할 것이다. 각각 feat 브랜치를 만들고, develop에 합치고, feat만들고 develop에 합치고
+- develop은 최신의 파일이 된다.
+- master는 중간 중간에 반영. (문제 없음을 확인한 후 너무 자주 올릴 필요는 없음)
+
+./test.me ->  ./  프로젝트명
+./test.jsp -> ./  webapp 폴더
+
+
+* 프로젝트를 시작할때 준비
+
+	- 요구사항 설계
+	  게시판 글쓰기 (사용자이름, 제목, 내용, 작성일, 조회수)
+	  게시판 리스트
+	  게시판 본문보기 (글읽기), 게시판 조회수 증가
+	  게시판 글 수정
+	  게시판 글 삭제
+	  
+	- 데이터베이스
+	  * DB 생성(계정), 테이블 생성 & 설계
+	  * 더미 데이터 생성
+	  	=> https://www.mockaroo.com/
+	  
+	- 스프링MVC
+	  * 패키지구조(계층형, 도메인형), 코드인벤션(규칙)을 설정
+	  https://ui.toast.com/fe-guide/ko_CODING-CONVENTION
+	  * 팀원 각각의 역할 분담
+	  * 테스트 방법 수립
+	  * 필요한 라이브러리 준비 (pom.xml)
+	  
+	- 화면
+	  * 뷰페이지 형태를 설정(JSP, HTML, 프로그램, 모바일)
+	
+	
+	
+	* 스프링의 패키지 구조
+	  1) 계층형 (각각의 계층에 요소를 모아둔 것)
+	  	 - com.itwillbs.controller
+	  	 	MemberController / BoardController / GoodsController ...
+	  	 - com.itwillbs.domain
+	  	 - com.itwillbs.service
+	  	 - com.itwillbs.persistence
+	  	 
+	  	 * 장점 : 단순한 구조로 프로젝트의 이해도를 높임(주니어)
+	  	 * 단점 : 하나의 패키지에 너무 많은 클래스(파일)가 존재하게 된다.
+	  	 		  => 모듈 분리할때 어려움
+	  	 		  
+	  2) 도메인형 (각각의 동작에 따라 패키지를 분류한 것)
+	  	 - com.itwillbs.member.controller
+	  	 	MemberController
+	  	 - com.itwillbs.member.domain
+	  	 - com.itwillbs.member.service
+	  	 - com.itwillbs.member.persistence 
+	  	 
+	  	 - com.itwillbs.board.controller
+	  	 	BoardController
+	  	 - com.itwillbs.board.domain
+	  	 - com.itwillbs.board.service
+	  	 - com.itwillbs.board.persistence
+	  	 
+	  	 * 장점 : 관련코드가 모여있음. => 모듈로 분리가 쉽다.
+	  	 * 단점 : 프로젝트 이해도가 낮을 경우 구조 파악이 힘듦
+	  	 		  개발자의 주관이 작용을 함.
+	  	 		  패키지 순환참조 발생가능성이 높음
+	  
+	  * 프로젝트의 복잡도가 높음
+	  	제공하는 기능이 많음(포함된 클래스 개수 많음)
+	  	제공가능한 기능을 명확기준으로 분리가능
+	  	추후에 모듈로 분리해서 사용가능
+	  	=> 도메인형 구조
+	  	
+	  * 프로젝트의 복잡도가 낮음
+	  	제공하는 기능이 적음(포함된 클래스 개수 적음)
+	  	제공가능한 기능을 분리하기가 애매할 때
+	  	모듈 분리가 필요없는 프로젝트(소규모)
+	  	=> 계층형 구조
+	  	
+	  
+	D:/shared/include.zip, static.zip
+	=>src/main/webapp/resources 폴더에 붙여넣기
