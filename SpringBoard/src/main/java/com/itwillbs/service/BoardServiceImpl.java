@@ -39,4 +39,27 @@ public class BoardServiceImpl implements BoardService {
 		// => 전달받은 정보를 있는 그대로 전달한다.
 	}
 
+	@Override
+	public void increaseViewCnt(int bno) throws Exception {
+		logger.debug(" increaseViewCnt(int bno) 시작");
+		// DAO 동작(조회수를 1 증가하는 동작)을 호출
+		bDao.updateViewCnt(bno);
+		
+		logger.debug(" increaseViewCnt(int bno) 끝");
+	}
+
+	@Override
+	public BoardVO getBoard(int bno) throws Exception {
+		logger.debug(" getBoard(int bno) 시작");
+		
+		// DAO 처리 동작을 호출
+		
+		logger.debug(" getBoard(int bno) 종료");
+		return bDao.selectBoard(bno);
+	}
+
+	
+	
+	
+
 }

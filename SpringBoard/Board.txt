@@ -81,3 +81,8 @@ master => develop => feat
 	  
 	D:/shared/include.zip, static.zip
 	=>src/main/webapp/resources 폴더에 붙여넣기
+	
+	* RequestParam은 request.getParameter()와 같은 의미이고,
+					 => 무조건 String 타입
+	ModelAttribute는 request.getAttribute()와 같은 의미이다.
+	

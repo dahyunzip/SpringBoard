@@ -3,7 +3,8 @@ package com.itwillbs.controller;
 import java.util.List;
 
 import javax.inject.Inject;
-
+import javax.servlet.http.HttpSession;
+import com.itwillbs.service.BoardServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 //import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.BoardVO;
@@ -32,11 +34,17 @@ import com.itwillbs.service.BoardService;
 @Controller
 @RequestMapping(value="/board/*")
 public class BoardController {
+
+    private final BoardServiceImpl boardServiceImpl;
 	// mylog (출력로그)
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
 	@Inject
 	private BoardService bService;
+
+    BoardController(BoardServiceImpl boardServiceImpl) {
+        this.boardServiceImpl = boardServiceImpl;
+    }
 	
 	// http://localhost:8088/
 	
@@ -75,7 +83,7 @@ public class BoardController {
 	// 수행하려는 동작이 입력받거나 조회의 동작이면, GET
 	// 입력받은 데이터를 처리, 저장, 수정, 삭제하는 경우, POST
 	@RequestMapping(value="/listALL", method=RequestMethod.GET)
-	public void listALLGET(Model model) throws Exception{
+	public void listALLGET(Model model, HttpSession session) throws Exception{
 		logger.debug(" /board/listALL -> listALLGET() 실행!");
 		
 		// 서비스 -> DAO : (DB에 저장된 모든 게시판 글정보를 가져오기)
@@ -88,6 +96,9 @@ public class BoardController {
 		model.addAttribute("boardList", boardList);
 		//model.addAttribute(boardList); // => boardVOList 이름
 		
+		// 세션영역에 조회수증가 여부를 판단하는 상태값을 생성
+		session.setAttribute("incrementStatus", true); // 조회수 증가 가능
+		
 		// 리턴 void -> 주소이름과 같은 주소를 view 페이지로 설정
 		logger.debug("/views/board/listALL.jsp 페이지 이동");
 	}
@@ -96,15 +107,40 @@ public class BoardController {
 	// http://localhost:8088/board/read?bno=10
 	// 게시판 글 읽기 (본문 내용확인) - GET
 	@RequestMapping(value="/read", method=RequestMethod.GET)
-	public String readGET(BoardVO vo, Model model) throws Exception{
+	public String readGET(Model model, 
+						  HttpSession session,
+						  @RequestParam(value="bno", defaultValue = "1") int bno) throws Exception{
+						  // request.getParameter(); => String 타입인데
+						  // @RequestParam => 자동 형변환을 포함(문자, 숫자, 날짜...)
+						  // 파라미터 없을 경우 /read만 부를 시 400에러가 뜬다. defaultValue로 1을 설정한다.
 		logger.debug(" /board/read -> readGET() 실행! ");
-		
 		// 전달된 정보(파라메터) 저장
+		logger.debug(" bno : " + bno);
+		
+		// 세션 영역에 저장된 조회수 변경가능 상태정보를 출력
+		boolean incrementStatus = (boolean) session.getAttribute("incrementStatus");
+		logger.debug(" incrementStatus : " + incrementStatus);
+		
+		if(incrementStatus) {
+			// 서비스 -> DAO : 특정 번호(bno)에 해당하는 글 조회수를 1증가
+			bService.increaseViewCnt(bno);
+			logger.debug(" 조회수 1 증가! ");
+			
+			// 상태 변경 true => false
+			session.setAttribute("incrementStatus", !incrementStatus);
+		}
+		
 		
 		// 서비스 -> DAO : 특정 번호(bno)에 해당하는 글정보만 가져오기
+		BoardVO resultVO = bService.getBoard(bno);
+		logger.debug(" resultVO : {}", resultVO);
+		
+		logger.debug(" 게시글 불러오기 완료 ");
+
+		// DB에서 받아
+		model.addAttribute(resultVO); //객체를 보낸다.
 		
 		// 연결된 뷰 페이지에 출력
-		
 		return "/board/read";
 	}
 

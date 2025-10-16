@@ -15,4 +15,15 @@
 	<select id="selectBoardListALL" resultType="BoardVO">
 		select * from tbl_board order by bno desc
 	</select>
+	
+	<!-- 특정 게시판 글 조회수 1 증가 -->
+	<update id="updateViewCnt">
+		update tbl_board set viewcnt=viewcnt+1
+		where bno = #{bno}
+	</update>
+	
+	<!-- 특정 게시판 글 정보를 조회 -->
+	<select id="selectBoard" resultType="BoardVO">
+		select * from tbl_board where bno=#{bno}
+	</select>
 </mapper>

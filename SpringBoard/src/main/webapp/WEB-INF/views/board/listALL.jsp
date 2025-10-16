@@ -8,7 +8,8 @@
 <div class="content">
 	<h1>/views/board/listALL.jsp</h1>
 	<%-- ${requestScope.boardList } --%>
-	result : ${result }
+	result : ${result }<br>
+	incrementStatus : ${sessionScope.incrementStatus }
 	<!-- result는 rttr 이어서, 한번만 쓰고 사라짐. (addFlashAttribute) 했기 때문 -->
 	
 	<div class="box box-primary">
