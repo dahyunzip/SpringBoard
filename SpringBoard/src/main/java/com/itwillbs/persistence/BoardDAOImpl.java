@@ -68,6 +68,25 @@ public class BoardDAOImpl implements BoardDAO {
 		return resultVO;
 	}
 
-	
+	@Override
+	public void updateBoard(BoardVO uvo) throws Exception {
+		logger.debug(" updateBoard(BoardVO uvo) 실행! ");
+		int result = sqlSession.update(NAMESPACE+"updateBoard", uvo);
+		
+		if(result > 0) logger.debug("게시판 글 수정 완료!");
+		
+		logger.debug(" updateBoard(BoardVO uvo) 종료! ");
+		
+	}
+
+	@Override
+	public Integer deleteBoard(int bno) throws Exception {
+		logger.debug(" deleteBoard(int bno) 시작! ");
+		
+		// DB연결, SQL 실행
+		int result = sqlSession.delete(NAMESPACE+"deleteBoard", bno);
+		logger.debug(" deleteBoard(int bno) 끝! ");
+		return result;
+	}
 	
 }

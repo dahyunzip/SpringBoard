@@ -61,6 +61,9 @@
 	</div>
 </div>
 
+<!-- sweetalert 라이브러리 추가(설치) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script type="text/javascript">
 	// EL 표현식에 ' ' 붙여주면, javascript에서 인식 가능함
 	// javascript에서 ''는 문자표현식이라 문자로 표현이 되는게 상식상 맞다.
@@ -71,9 +74,33 @@
 	// alert('createOK');
 	
 	var result = '${result}'; // 실제로는 'createOK' 값이 저장
+							  // 글수정시 'modifyOK'
 	if(result == "createOK"){
-		alert("글 쓰기 성공!");
+		Swal.fire({
+		  position: "center",
+		  icon: "success",
+		  title: "글쓰기 성공!",
+		  showConfirmButton: false,
+		  timer: 1500
+		});
+	}else if(result == "modifyOK"){
+		Swal.fire({
+		  position: "center",
+		  icon: "success",
+		  title: "글 수정 성공!",
+		  showConfirmButton: false,
+		  timer: 1500
+		});
+	}else if(result == "removeOK"){
+		Swal.fire({
+			  position: "center",
+			  icon: "success",
+			  title: "글 삭제 성공!",
+			  showConfirmButton: false,
+			  timer: 1500
+			});
 	}
+	
 </script>
 <!--  템플릿 include -->
 <%@ include file="../include/footer.jsp" %>

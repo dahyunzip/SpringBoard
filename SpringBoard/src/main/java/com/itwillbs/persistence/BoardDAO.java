@@ -21,4 +21,10 @@ public interface BoardDAO {
 	
 	// 게시판 특정 글 읽기
 	public BoardVO selectBoard(int bno) throws Exception;
+	
+	// 게시판 글 정보 수정하기
+	public void updateBoard(BoardVO uvo) throws Exception;
+	
+	// 게시판 글 삭제하기
+	public Integer deleteBoard(int bno) throws Exception;
 }

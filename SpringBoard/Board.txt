@@ -86,3 +86,51 @@ master => develop => feat
 					 => 무조건 String 타입
 	ModelAttribute는 request.getAttribute()와 같은 의미이다.
 	
+	DAO -> Service -> Controller 
+		throws Exception
+	* AOP : 관점 지향 프로그래밍(Aspect Oriented Programming)
+		=> 개발자는 개발에 집중해서 개발할 수 있도록 
+		   부수적인 동작은 프레임워크(스프링)가 모두 처리해주는 개발 방식
+		=> 메서드안에서 주기능과 보조기능으로 분리해서 각각 사용
+		
+		보조기능 : 로깅(로그 출력), 보안, 트랜잭션, 예외처리
+		주기능 : 개발자가 개발하는 코드(회원가입, 글쓰기, 리스트 출력, 수정, 삭제 ... )
+		
+		* AOP 용어
+		- aspect : 구현하고자 하는 보조기능(메서드)
+		- advice : aspect를 구현하는 클래스
+		- joinpoint : advice를 적용하는 지점(메서드 레벨 사용)
+		- pointcut : advice가 적용되는 대상을 지정/설정
+		- target : advice가 적용된 클래스 
+		- weaving : advice를 주기능에 적용하는 것
+		
+		class A{ => advice
+			public void 보조 기능(){
+				=> aspect
+			}
+		}
+		
+		class B{ => Target
+			public void 주기능(){
+				1. 전달된 파라메터 저장
+				A.보조기능();					joinpoint < 보조기능 추가
+				2. 서비스 연결
+				3. 결과 출력
+				4. 페이지 이동
+			}
+		}
+		
+
+* 페이징 처리
+	1) a 태그 : 검색엔진에 노출 쉬움
+	2) form 태그 : 빠른 속도
+	
+	- 반드시 페이징처리는 GET방식! (주소로 정보 전달)
+	- 목록으로 이동하는 버튼 클릭시 이전 페이지를 기억
+	
+	
+	
+	
+-- 기존의 테이블 데이터 복사(self-copy)
+insert into tbl_board(title, writer, content)
+ (select title, writer, content from tbl_board);

@@ -35,17 +35,12 @@ import com.itwillbs.service.BoardService;
 @RequestMapping(value="/board/*")
 public class BoardController {
 
-    private final BoardServiceImpl boardServiceImpl;
 	// mylog (출력로그)
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
 	@Inject
 	private BoardService bService;
 
-    BoardController(BoardServiceImpl boardServiceImpl) {
-        this.boardServiceImpl = boardServiceImpl;
-    }
-	
 	// http://localhost:8088/
 	
 	// 게시판 글쓰기 - GET
@@ -125,7 +120,6 @@ public class BoardController {
 			// 서비스 -> DAO : 특정 번호(bno)에 해당하는 글 조회수를 1증가
 			bService.increaseViewCnt(bno);
 			logger.debug(" 조회수 1 증가! ");
-			
 			// 상태 변경 true => false
 			session.setAttribute("incrementStatus", !incrementStatus);
 		}
@@ -134,7 +128,6 @@ public class BoardController {
 		// 서비스 -> DAO : 특정 번호(bno)에 해당하는 글정보만 가져오기
 		BoardVO resultVO = bService.getBoard(bno);
 		logger.debug(" resultVO : {}", resultVO);
-		
 		logger.debug(" 게시글 불러오기 완료 ");
 
 		// DB에서 받아
@@ -144,4 +137,75 @@ public class BoardController {
 		return "/board/read";
 	}
 
+	//http://localhost:8088/board/modify?bno=10
+	// 게시판 글 수정 - GET
+	@RequestMapping(value="/modify", method=RequestMethod.GET)
+	public void modifyGET(Model model,
+						@ModelAttribute("bno") int bno) throws Exception{
+		logger.debug("/board/modify -> modifyGET() 실행");
+		// 전달된 정보(파라메터) 저장
+		logger.debug("bno : " + bno);
+		
+		// 서비스 -> DAO 
+		// 기존에 DB에 저장된 글정보를 가져와서 화면에 출력
+		BoardVO resultVO = bService.getBoard(bno);
+		logger.debug(" result : {}", resultVO);
+		
+		// 연결된 뷰페이지로 전달 => model 객체
+		model.addAttribute(resultVO);
+		//model.addAttribute(bService.getBoard(bno));
+		
+		logger.debug(" 게시글 불러오기 완료");
+		
+		logger.debug(" views/board/modify.jsp 페이지 실행");
+	}
+	// 게시판 글 수정 - POST
+	@RequestMapping(value="/modify", method=RequestMethod.POST)
+	public String modifyPOST(BoardVO vo,
+							RedirectAttributes rttr	) throws Exception{
+		logger.debug("/board/modify.jsp 폼태그 submit() -> modifyPOST() 실행 ");
+		// 전달된 정보 저장
+		logger.debug("vo : {}", vo);
+		
+		// 서비스 -> DAO : 전달된 정보를 사용해서 정보 수정
+		bService.boardModify(vo);
+		
+		rttr.addFlashAttribute("result", "modifyOK");
+		
+		// 다시 리스트 페이지로 이동
+		return "redirect:/board/listALL";
+		
+		// 다시 read 페이지로 이동 (bno 가지고 이동)
+		// 1)
+		// rttr.addAttribute("bno", vo.getBno());
+		// 여러번 사용, URI에 표시 O
+		
+		// rttr.addFlashAttribute("bno", vo.getBno());
+		// 1번만 사용, URI에 표시 X (세션 영역 저장)
+		
+		// return "redirect:/board/read";
+		
+		// 2)
+		// return "redirect:/board/read"+vo.getBno();
+		
+	}
+	
+	@RequestMapping(value="/remove", method = RequestMethod.POST)
+	public String removePOST(@ModelAttribute("bno") int bno,
+							RedirectAttributes rttr) throws Exception {
+		logger.debug(" /board/remove => removePOST() 실행");
+		
+		// 전달된 정보(파라메터 bno) 저장
+		logger.debug(" bno : " + bno);
+		
+		// 서비스 -> DAO : 특정 게시판글(bno)에 해당하는 글 정보를 삭제
+		int result = bService.boardRemove(bno);
+		if(result == 1) {
+			logger.debug(" 게시판"+ bno +"번 글 삭제 성공! ");
+		}
+		rttr.addFlashAttribute("result", "removeOK");
+		// 페이지 이동
+		return "redirect:/board/listALL";
+	}
 }
+

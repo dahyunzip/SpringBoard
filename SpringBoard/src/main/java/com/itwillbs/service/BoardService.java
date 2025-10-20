@@ -22,4 +22,9 @@ public interface BoardService {
 	
 	// 게시판 특정 글 정보를 조회 (본문읽기)
 	public BoardVO getBoard(int bno) throws Exception;
+	
+	// 게시판 글 정보를 수정
+	public void boardModify(BoardVO uvo) throws Exception;
+	
+	public Integer boardRemove(int bno) throws Exception;
 }

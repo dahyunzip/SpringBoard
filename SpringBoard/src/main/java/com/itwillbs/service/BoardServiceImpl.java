@@ -51,15 +51,27 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public BoardVO getBoard(int bno) throws Exception {
 		logger.debug(" getBoard(int bno) 시작");
-		
 		// DAO 처리 동작을 호출
-		
 		logger.debug(" getBoard(int bno) 종료");
 		return bDao.selectBoard(bno);
 	}
 
-	
-	
-	
+	@Override
+	public void boardModify(BoardVO uvo) throws Exception {
+		logger.debug(" boardModify(BoardVO uvo) 시작 ");
+		// DAO - 게시판 글정보를 수정하는 동작 
+		bDao.updateBoard(uvo);
+		logger.debug(" boardModify(BoardVO uvo) 끝 ");
+		
+	}
+
+	@Override
+	public Integer boardRemove(int bno) throws Exception {
+		logger.debug(" boardRemove(int bno) 시작");
+		// DAO - 게시판 글정보를 삭제하는 동작
+		int result = bDao.deleteBoard(bno);
+		logger.debug(" boardRemove(int bno) 종료");
+		return result;
+	}
 
 }
