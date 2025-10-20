@@ -16,6 +16,15 @@
 		select * from tbl_board order by bno desc
 	</select>
 	
+	<!-- 게시판 글 목록 조회(페이징) -->
+	<select id="selectBoardListPage" resultType="BoardVO">
+		<!-- select * from tbl_board limit 0,10 -->
+		<!-- select * from tbl_board limit #{page},10  -->
+		<!-- select * from tbl_board limit #{page},#{pageSize} --> 
+		select * from tbl_board limit #{pageStart},#{pageSize} 
+	</select>
+	
+	
 	<!-- 특정 게시판 글 조회수 1 증가 -->
 	<update id="updateViewCnt">
 		update tbl_board set viewcnt=viewcnt+1

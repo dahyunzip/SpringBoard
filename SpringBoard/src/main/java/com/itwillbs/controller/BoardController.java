@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.BoardVO;
+import com.itwillbs.domain.Criteria;
 import com.itwillbs.service.BoardService;
 
 /**
@@ -71,18 +72,25 @@ public class BoardController {
 		
 		// 페이지 이동 (게시판 리스트)
 		logger.debug(" 글쓰기 완료 후 페이지 이동(listALL) ");
-		return "redirect:/board/listALL";
+		//return "redirect:/board/listALL";
+		return "redirect:/board/listCri";
 	}
 	
 	// 게시판 리스트 출력 - GET
 	// 수행하려는 동작이 입력받거나 조회의 동작이면, GET
 	// 입력받은 데이터를 처리, 저장, 수정, 삭제하는 경우, POST
+	// http://localhost:8088/board/listALL
 	@RequestMapping(value="/listALL", method=RequestMethod.GET)
-	public void listALLGET(Model model, HttpSession session) throws Exception{
+	public void listALLGET(Model model, HttpSession session, Criteria cri) throws Exception{
 		logger.debug(" /board/listALL -> listALLGET() 실행!");
 		
 		// 서비스 -> DAO : (DB에 저장된 모든 게시판 글정보를 가져오기)
-		List<BoardVO> boardList = bService.getBoardList();
+		// List<BoardVO> boardList = bService.getBoardList();
+		
+//		Criteria cri = new Criteria(); 매개변수로 옮김으로써 new가 되어진다.
+//		cri.setPage(2);
+//		cri.setPageSize(10);
+		List<BoardVO> boardList = bService.getBoardListPage(cri);
 		
 		//logger.debug(" list : " + boardList);
 		logger.debug(" list : " + boardList.size());
@@ -97,6 +105,28 @@ public class BoardController {
 		// 리턴 void -> 주소이름과 같은 주소를 view 페이지로 설정
 		logger.debug("/views/board/listALL.jsp 페이지 이동");
 	}
+	
+	// http://localhost:8088/board/listCri?page=2&pageSize=5
+	@RequestMapping(value="/listCri", method=RequestMethod.GET)
+	public void listCriGET(Model model, HttpSession session, Criteria cri) throws Exception{
+		logger.debug(" /board/listCri -> listCriGET() 실행!");
+		
+		List<BoardVO> boardList = bService.getBoardListPage(cri);
+		
+		//logger.debug(" list : " + boardList);
+		logger.debug(" list : " + boardList.size());
+		
+		// DB에서 가져온 정보를 연결된 뷰페이지에 전달 => Model
+		model.addAttribute("boardList", boardList);
+		//model.addAttribute(boardList); // => boardVOList 이름
+		
+		// 세션영역에 조회수증가 여부를 판단하는 상태값을 생성
+		session.setAttribute("incrementStatus", true); // 조회수 증가 가능
+		
+		// 리턴 void -> 주소이름과 같은 주소를 view 페이지로 설정
+		logger.debug("/views/board/listCri.jsp 페이지 이동");
+	}
+	
 	
 	// http://localhost:8088/board/read/10 : path variable rest에서 배웁니당.
 	// http://localhost:8088/board/read?bno=10
@@ -173,7 +203,8 @@ public class BoardController {
 		rttr.addFlashAttribute("result", "modifyOK");
 		
 		// 다시 리스트 페이지로 이동
-		return "redirect:/board/listALL";
+		//return "redirect:/board/listALL";
+		return "redirect:/board/listCri";
 		
 		// 다시 read 페이지로 이동 (bno 가지고 이동)
 		// 1)
@@ -205,7 +236,8 @@ public class BoardController {
 		}
 		rttr.addFlashAttribute("result", "removeOK");
 		// 페이지 이동
-		return "redirect:/board/listALL";
+		//return "redirect:/board/listALL";
+		return "redirect:/board/listCri";
 	}
 }
 

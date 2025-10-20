@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.BoardVO;
+import com.itwillbs.domain.Criteria;
 import com.itwillbs.persistence.BoardDAO;
 
 @Service
@@ -37,6 +38,12 @@ public class BoardServiceImpl implements BoardService {
 		
 		// return bDao.selectBoardListALL();
 		// => 전달받은 정보를 있는 그대로 전달한다.
+	}
+	
+
+	@Override
+	public List<BoardVO> getBoardListPage(Criteria cri) throws Exception {
+		return bDao.selectBoardListPage(cri);
 	}
 
 	@Override

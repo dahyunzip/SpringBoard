@@ -77,7 +77,7 @@
 		// 목록 버튼 클릭시
 		$(".btn-primary").click(function(){
 			//alert("목록 버튼 클릭!");
-			location.href="/board/listALL";
+			location.href="/board/listCri";
 		});
 	});
 </script>
