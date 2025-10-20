@@ -1,0 +1,8 @@
+aop.txt
+	계산기 + - * / : 주기능 (계산)
+				     보조기능 (계산정보 출력) 
+
+Calculator가 우리의 DAO, Service ,...
+LoggingAdvice가 보조 기능을 할 거다..
+context.xml로 연결한 다음 , 특정 시점에 연결해 둔 객체를 연결해서
+주기능을 실행하면서 보조기능을 실행하게끔함. 
