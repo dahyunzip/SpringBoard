@@ -8,6 +8,13 @@
 <div class="content">
 	<h1>/views/board/listCri.jsp</h1>
 	<%-- ${requestScope.boardList } --%>
+	pageVO : ${pageVO}<br>
+	cri : ${pageVO.cri }<br>
+	page : ${pageVO.cri.page }, pageSize : ${pageVO.cri.pageSize } <br>
+	
+	<c:set var="cri" value="${pageVO.cri }"/>
+	c-set page : ${cri.page }, pageSize : ${cri.pageSize}<br>
+	
 	result : ${result }<br>
 	incrementStatus : ${sessionScope.incrementStatus }
 	<!-- result는 rttr 이어서, 한번만 쓰고 사라짐. (addFlashAttribute) 했기 때문 -->
@@ -51,11 +58,17 @@
         </div>
         <div class="box-footer clearfix">
 	        <ul class="pagination pagination-sm no-margin pull-right">
-	           <li><a href="#">«</a></li>
-	           <li><a href="#">1</a></li>
-	           <li><a href="#">2</a></li>
-	           <li><a href="#">3</a></li>
-	           <li><a href="#">»</a></li>
+	        	<c:if test="${pageVO.prev }">
+	        		<li><a href="/board/listCri?page=${pageVO.startPage - 1 }">«</a></li>
+	        	</c:if>
+	           <c:forEach var="i" begin="${pageVO.startPage }" end="${pageVO.endPage }" step="1">
+	            <li class="${cri.page == i? 'active' : ''}">
+	            	<a href="/board/listCri?page=${i}">${i }</a>
+	            </li>
+	           </c:forEach>
+	           <c:if test="${pageVO.next }">
+	           		<li><a href="/board/listCri?page=${pageVO.endPage + 1 }">»</a></li>
+	           </c:if>
 	        </ul>
        	</div>
 	</div>

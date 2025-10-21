@@ -21,7 +21,7 @@
 		<!-- select * from tbl_board limit 0,10 -->
 		<!-- select * from tbl_board limit #{page},10  -->
 		<!-- select * from tbl_board limit #{page},#{pageSize} --> 
-		select * from tbl_board limit #{pageStart},#{pageSize} 
+		select * from tbl_board order by bno desc limit #{pageStart},#{pageSize}
 	</select>
 	
 	

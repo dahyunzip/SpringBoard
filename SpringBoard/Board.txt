@@ -128,7 +128,41 @@ master => develop => feat
 	- 반드시 페이징처리는 GET방식! (주소로 정보 전달)
 	- 목록으로 이동하는 버튼 클릭시 이전 페이지를 기억
 	
-	
+* 페이징 블럭 (페이징 처리 하단)
+	시작페이지 (startPage)
+		=> startPage = (endPage - pageBlock) + 1
+		=> startPage = 10 - 10 +1 = 1
+	끝페이지 (endPage) - 제일 먼저!
+		=> endPage = (int)(Math.ceil(page/(double)pageBlock) * pageBlock) 
+			=> ex) 1p => (1/10.0) -> 올림 : 1.0*10 => (int)10.0 => 10
+			=> ex) 15p => (15/10.0) -> 올림 : 2.0*10 => (int)20.0 => 20
+		=> (int)(Math.ceil(totalCount / (double)pageSize)) => 저장된 총 페이지 수 
+		
+		저장된 총 페이지 수와 endPage와 비교해서, endPage가 더 크면 잘못 계산된것이니 endPage를 저장된 총 페이지수로 바꾼다.
+		if(저장된 총 페이지 수 < endPage) endPage = 저장된 총 페이지수;
+		
+	전체 데이터(글)의 개수(totalCount)
+		=> select count();
+		
+	이전페이지 (prev)
+		=> prev = (startPage == 1)? false : true
+		=> prev = startPage != 1; //1이 아니면 true, 1이 아닌게 아니면 false
+		
+	다음페이지 (next) 
+		=> next = endPage * pageSize >= totalCount? false : true
+		=> next = endPage * pageSize < totalCount
+		
+	ex) 총 122개, 한 페이지에 10개씩 출력, 페이징 블럭의 크기 : 10
+		=> 필요한 페이지수는? 13개
+		- page : 1
+		  startPage : 1, endPage : 10, prev : X, next : O
+		- page : 3 (21-30)
+		  startPage : 1, endPage : 10, prev : X, next : O
+		- page : 8 (71-80)
+		  startPage : 1, endPage : 10, prev : X, next : O
+		- page : 12 (111-120)
+		  startPage : 10, endPage : 13, prev : O, next : X
+			
 	
 	
 -- 기존의 테이블 데이터 복사(self-copy)

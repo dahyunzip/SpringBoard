@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.BoardVO;
 import com.itwillbs.domain.Criteria;
+import com.itwillbs.domain.PageVO;
 import com.itwillbs.service.BoardService;
 
 /**
@@ -111,12 +112,19 @@ public class BoardController {
 	public void listCriGET(Model model, HttpSession session, Criteria cri) throws Exception{
 		logger.debug(" /board/listCri -> listCriGET() 실행!");
 		
+		// 페이징 처리 객체 PageVO 생성
+		PageVO pageVO = new PageVO();
+		pageVO.setCri(cri);
+		pageVO.setTotalCount(2560); // 개수 + 계산된 정보
+		
+		
 		List<BoardVO> boardList = bService.getBoardListPage(cri);
 		
 		//logger.debug(" list : " + boardList);
 		logger.debug(" list : " + boardList.size());
 		
 		// DB에서 가져온 정보를 연결된 뷰페이지에 전달 => Model
+		model.addAttribute(pageVO);
 		model.addAttribute("boardList", boardList);
 		//model.addAttribute(boardList); // => boardVOList 이름
 		

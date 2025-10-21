@@ -318,7 +318,7 @@
 						<ul class="treeview-menu">
 							<li><a href="/board/regist"><i
 									class="fa fa-circle-o"></i> 게시판 글쓰기</a></li>
-							<li><a href="/board/listALL"><i
+							<li><a href="/board/listCri"><i
 									class="fa fa-circle-o"></i> 게시판 목록(list)</a></li>
 						</ul></li>
 					<li class="treeview"><a href="#"> <i class="fa fa-files-o"></i>
