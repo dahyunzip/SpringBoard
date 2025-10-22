@@ -40,10 +40,20 @@ public class BoardServiceImpl implements BoardService {
 		// => 전달받은 정보를 있는 그대로 전달한다.
 	}
 	
-
+	// 게시판 모든 글정보를 가져오기 (리스트)
 	@Override
 	public List<BoardVO> getBoardListPage(Criteria cri) throws Exception {
 		return bDao.selectBoardListPage(cri);
+	}
+
+	// 게시판 총 글 개수
+	@Override
+	public int getTotalCount() throws Exception {
+		logger.debug(" getTotalCount() 시작");
+		// DAO - 게시판 총 글개수 조회
+		int result = bDao.selectTotalCount();
+		logger.debug(" getTotalCount() 끝");
+		return result;
 	}
 
 	@Override

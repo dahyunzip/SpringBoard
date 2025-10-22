@@ -20,6 +20,9 @@ public interface BoardService {
 	// 게시판 모든 글정보를 가져오기 (리스트)
 	public List<BoardVO> getBoardListPage(Criteria cri) throws Exception;
 	
+	// 게시판 모든 글 개수를 가져오기
+	public int getTotalCount() throws Exception;
+	
 	// 게시판 특정 글 조회수를 1증가
 	public void increaseViewCnt(int bno) throws Exception;
 	

@@ -24,7 +24,11 @@
 		select * from tbl_board order by bno desc limit #{pageStart},#{pageSize}
 	</select>
 	
-	
+	<!-- 게시판에 저장된 총 글의 개수 조회 -->
+	<select id="selectTotalCount" resultType="int">
+		select count(bno) from tbl_board
+	</select>
+		
 	<!-- 특정 게시판 글 조회수 1 증가 -->
 	<update id="updateViewCnt">
 		update tbl_board set viewcnt=viewcnt+1

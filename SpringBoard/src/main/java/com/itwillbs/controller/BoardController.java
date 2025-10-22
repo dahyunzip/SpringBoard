@@ -115,7 +115,8 @@ public class BoardController {
 		// 페이징 처리 객체 PageVO 생성
 		PageVO pageVO = new PageVO();
 		pageVO.setCri(cri);
-		pageVO.setTotalCount(2560); // 개수 + 계산된 정보
+		//pageVO.setTotalCount(2560); // 개수 + 계산된 정보
+		pageVO.setTotalCount(bService.getTotalCount()); // 개수 + 계산된 정보
 		
 		
 		List<BoardVO> boardList = bService.getBoardListPage(cri);
@@ -142,7 +143,8 @@ public class BoardController {
 	@RequestMapping(value="/read", method=RequestMethod.GET)
 	public String readGET(Model model, 
 						  HttpSession session,
-						  @RequestParam(value="bno", defaultValue = "1") int bno) throws Exception{
+						  @RequestParam(value="bno", defaultValue = "1") int bno,
+						  @ModelAttribute("page") int page) throws Exception{
 						  // request.getParameter(); => String 타입인데
 						  // @RequestParam => 자동 형변환을 포함(문자, 숫자, 날짜...)
 						  // 파라미터 없을 경우 /read만 부를 시 400에러가 뜬다. defaultValue로 1을 설정한다.
@@ -176,10 +178,12 @@ public class BoardController {
 	}
 
 	//http://localhost:8088/board/modify?bno=10
+	//http://localhost:8088/board/modify?bno=10&page=2
 	// 게시판 글 수정 - GET
 	@RequestMapping(value="/modify", method=RequestMethod.GET)
 	public void modifyGET(Model model,
-						@ModelAttribute("bno") int bno) throws Exception{
+						@ModelAttribute("bno") int bno,
+						@ModelAttribute("page") int page) throws Exception{
 		logger.debug("/board/modify -> modifyGET() 실행");
 		// 전달된 정보(파라메터) 저장
 		logger.debug("bno : " + bno);
@@ -200,6 +204,7 @@ public class BoardController {
 	// 게시판 글 수정 - POST
 	@RequestMapping(value="/modify", method=RequestMethod.POST)
 	public String modifyPOST(BoardVO vo,
+							@ModelAttribute("page") int page,
 							RedirectAttributes rttr	) throws Exception{
 		logger.debug("/board/modify.jsp 폼태그 submit() -> modifyPOST() 실행 ");
 		// 전달된 정보 저장
@@ -212,7 +217,7 @@ public class BoardController {
 		
 		// 다시 리스트 페이지로 이동
 		//return "redirect:/board/listALL";
-		return "redirect:/board/listCri";
+		return "redirect:/board/listCri?page="+page;
 		
 		// 다시 read 페이지로 이동 (bno 가지고 이동)
 		// 1)
@@ -231,7 +236,8 @@ public class BoardController {
 	
 	@RequestMapping(value="/remove", method = RequestMethod.POST)
 	public String removePOST(@ModelAttribute("bno") int bno,
-							RedirectAttributes rttr) throws Exception {
+							RedirectAttributes rttr,
+							@ModelAttribute("page") int page) throws Exception {
 		logger.debug(" /board/remove => removePOST() 실행");
 		
 		// 전달된 정보(파라메터 bno) 저장
@@ -245,7 +251,7 @@ public class BoardController {
 		rttr.addFlashAttribute("result", "removeOK");
 		// 페이지 이동
 		//return "redirect:/board/listALL";
-		return "redirect:/board/listCri";
+		return "redirect:/board/listCri?page="+page;
 	}
 }
 

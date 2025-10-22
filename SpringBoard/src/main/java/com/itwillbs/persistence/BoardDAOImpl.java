@@ -137,5 +137,15 @@ public class BoardDAOImpl implements BoardDAO {
 		logger.debug(" deleteBoard(int bno) 끝! ");
 		return result;
 	}
+
+	@Override
+	public int selectTotalCount() throws Exception {
+		logger.debug(" selectTotalCount() 시작");
+		int result = sqlSession.selectOne(NAMESPACE+"selectTotalCount");
+		logger.debug(" selectTotalCount() 끝");
+		return result;
+	}
+	
+	
 	
 }

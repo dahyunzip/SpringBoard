@@ -3,17 +3,19 @@
 <div class="content">
 	<h1>/view/board/modify.jsp</h1>
 	<h1>게시물 수정하기</h1>
-
 	<div class="box box-primary">
 		<div class="box-header with-border">
 			<h3 class="box-title">게시물 수정하기</h3>
 			조회수 : ${boardVO.viewcnt }<br>
-			incrementStatus : ${sessionScope.incrementStatus }
+			incrementStatus : ${sessionScope.incrementStatus }<br>
+			page : ${page }
 		</div>
 		<!-- /.box-header -->
 		
 		<!-- 페이지 이동시(수정, 삭제) 필요한 정보를 가져가기위한 폼태그 -->
 		<form role="form" method="post">
+			<input type="hidden" name="page" value=${page }>
+		
 			<!-- 액션에 속성값이 없을경우 동일한 주소(자기 자신페이지)를 호출 -->
 			<div class="box-body">
 				<div class="form-group">
@@ -37,7 +39,7 @@
 			<!-- /.box-body -->
 			<div class="box-footer">
 				<button type="submit" class="btn btn-danger" >수정</button>
-				<button type="submit" class="btn btn-primary" >목록</button>
+				<button type="button" class="btn btn-primary" >목록</button>
 			</div>
 		</form>
 		<!-- form end -->
@@ -54,8 +56,9 @@
 		// 목록 버튼 클릭시
 		$(".btn-primary").click(function(){
 			//alert("목록 버튼 클릭!");
-			location.href="/board/listCri";
+			location.href="/board/listCri?page=${page}";
 		});
+		
 	});
 </script>
 

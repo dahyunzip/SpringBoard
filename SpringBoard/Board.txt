@@ -168,3 +168,10 @@ master => develop => feat
 -- 기존의 테이블 데이터 복사(self-copy)
 insert into tbl_board(title, writer, content)
  (select title, writer, content from tbl_board);
+ 
+ 
+ -- 수정 GET : input hidden으로 page 정보 가져가고, ModelAttribute로 page 넘겨준다.
+ modify.jsp 에서도 page 정보 가져가고 
+ -- 수정 POST에 ModelAttribute로 파라메터정보 가져가게 한다.
+ 
+- Mail 보내기

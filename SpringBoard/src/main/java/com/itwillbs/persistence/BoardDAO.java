@@ -23,6 +23,9 @@ public interface BoardDAO {
 	public List<BoardVO> selectBoardListPage(int page, int pageSize) throws Exception;
 	public List<BoardVO> selectBoardListPage(Criteria cri) throws Exception;
 	
+	// 게시판 총 글의 개수 조회
+	public int selectTotalCount() throws Exception;
+	
 	// 게시판 특정 글 조회수를 1 증가
 	public void updateViewCnt(int bno) throws Exception;
 	

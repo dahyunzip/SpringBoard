@@ -45,7 +45,13 @@
 					<c:forEach var="vo" items="${boardList }">
 					<tr>
 						<td>${vo.bno }</td>
-						<td><a href="/board/read?bno=${vo.bno }">${vo.title }</a></td>
+						<td>
+							<!-- param은 최초 접근시 가지고 있지 않기 떄문에 사용 X! -->
+							<%-- <a href="/board/read?bno=${vo.bno }&page=${param.page}">${vo.title }</a>--%>
+							<!-- 객체에 담아와서 사용하는 것이 안전함! -->
+							<%-- <a href="/board/read?bno=${vo.bno }&page=${pageVO.cri.page}">${vo.title }</a>  --%>
+							<a href="/board/read?bno=${vo.bno }&page=${cri.page}">${vo.title }</a>
+						</td>
 						<td>${vo.writer }</td>
 						<td>
 							<span class="badge bg-green">${vo.viewcnt }</span>
@@ -63,6 +69,7 @@
 	        	</c:if>
 	           <c:forEach var="i" begin="${pageVO.startPage }" end="${pageVO.endPage }" step="1">
 	            <li class="${cri.page == i? 'active' : ''}">
+	            	<!-- 글작성시 page 정보 없기 때문에 param은 사용 X  -->
 	            	<a href="/board/listCri?page=${i}">${i }</a>
 	            </li>
 	           </c:forEach>

@@ -8,13 +8,19 @@
 		<div class="box-header with-border">
 			<h3 class="box-title">게시판 본문 읽기</h3>
 			조회수 : ${boardVO.viewcnt }<br>
-			incrementStatus : ${sessionScope.incrementStatus }
+			incrementStatus : ${sessionScope.incrementStatus }<br>
+			page : ${page }
 		</div>
 		<!-- /.box-header -->
 		
 		<!-- 페이지 이동시(수정, 삭제) 필요한 정보를 가져가기위한 폼태그 -->
 		<form role="form">
-			<input type="hidden" name="bno" value=${boardVO.bno }> 
+			<input type="hidden" name="bno" value=${boardVO.bno }>
+			<!-- model로 보낸 경우 -->
+			<input type="hidden" name="page" value="${page }">
+			
+			<!-- model로 보내지 않은 경우 아래 -->
+			<%-- <input type="hidden" name="page" value="${param.page }"> --%>
 		</form>
 		
 		<!-- 액션에 속성값이 없을경우 동일한 주소(자기 자신페이지)를 호출 -->
@@ -77,7 +83,8 @@
 		// 목록 버튼 클릭시
 		$(".btn-primary").click(function(){
 			//alert("목록 버튼 클릭!");
-			location.href="/board/listCri";
+			//location.href="/board/listCri?page=${param.page}";
+			location.href="/board/listCri?page=${page}";
 		});
 	});
 </script>
