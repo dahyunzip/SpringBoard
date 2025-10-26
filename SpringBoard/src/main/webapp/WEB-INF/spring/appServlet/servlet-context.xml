@@ -20,9 +20,16 @@
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
+
+	<!-- 파일업로드 설정 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="52428800"/> <!-- 최대업로드 크기 50KB -->
+		<beans:property name="maxInMemorySize" value="1000000"/> <!-- 디스크에 임시로 저장해놓은 공간의 크기, 1KB 미만 -->
+		<beans:property name="defaultEncoding" value="UTF-8"/> <!-- 파일업로드 인코딩. web.xml 인코딩과 별개로 처리 필요함 --> 
+		<!-- servlet-context라서 beans 써야함 -->
+	</beans:bean>
 	
 	<context:component-scan base-package="com.itwillbs.controller" />
-	
 	
 	
 </beans:beans>

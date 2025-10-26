@@ -174,4 +174,70 @@ insert into tbl_board(title, writer, content)
  modify.jsp 에서도 page 정보 가져가고 
  -- 수정 POST에 ModelAttribute로 파라메터정보 가져가게 한다.
  
-- Mail 보내기
+* 의존 객체 자동 주입(Automatic Dependency)
+  => 스프링 컨테이너가 자동으로 의존대상(객체)을 찾아서 주입해주는 동작
+  1) @Inject
+  	- Java에서 지원하는 어노테이션 (특정 프레임워크에 비종속적)
+  	- 대상을 찾는 순서
+  	  [ 타입 -> @Qualifier(별칭을 만들어서 구분할 수 있게 만드는 형태) ->  이름 -> 실패 ]
+  	- 사용하기 위해서 빌드도구에(Maven, Gradle) 의존성 추가 필요 : pom.xml 하단에 Inject 어노테이션이 있음. 사용하도록 기본적으로 설정돼있다.
+  	- 멤버변수, setter 메서드, 생성자, 일반메서드에서 사용 가능
+  	
+  2) @Autowired
+    - Spring에서 지원하는 어노테이션
+    - 대상을 찾는 순서
+      [ 타입 -> 이름 -> @Qualifier(별칭을 만들어서 구분할 수 있게 만드는 형태) -> 실패 ]
+      - 멤버변수, setter 메서드, 생성자, 일반메서드에서 사용 가능
+  
+  3) @Resource
+  	- Java에서 지원하는 어노테이션 (특정 프레임워크에 비종속적)
+  	- 대상을 찾는 순서
+  	  [ 이름 -> 타입 -> @Qualifier -> 실패 ]
+  	- 멤버변수, setter 메서드 
+  
+  ----------------------------------------------------------------------------	
+  
+  @Qualifier : 한정자, 객체를 구분하기위한 별명/이름
+  <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+  	<qualifier value="mysql"> <!--dataSource의 별명이 설정됨 -->
+  	MySQL 디비연결정보
+  </bean>
+  
+  <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+  	<qualifier value="oracle">
+  	Oracle 디비연결정보
+  </bean>
+  
+  코드예시)
+  @Autowired
+  @Qualifier("mysql")
+  private HikariDataSource dataSource;
+  
+  * 의존관계 주입
+  
+  1) 필드 주입 : @Autowired 붙여주면 자동으로 의존성을 추가
+  
+  @Autowired
+  private BoardDAO bDao;
+  만들어진 bean을 넣어준다.
+  
+  2) setter 주입 : 부트에서 많이 쓰이는 추세.
+     => 메서드 이름이 setXXXXX() 아니어도, setter 처럼 동작 수행할때 가능하다.
+  private BoardDAO bDao;
+  
+  @Autowired // 생략가능
+  public void setBoardDAO(BoardDAO bDao){ // (BoardDAO bDao) 만들어진 객체를 받아서 넣는다
+  	this.bDao = bDao;
+  }
+  
+  
+  3) 생성자 주입 : 현 시점 스프링의 권장사항. 안정화가 돼있다.
+     => 순환 참조를 막아줄 수 있음, 나쁜 냄새(배드 스멜)를 제거 
+  class BoardSerivceImpl{
+  	private BoardDAO bDao;
+  	
+  	@Autowired // 하나만 있을 경우 생략가능
+  	public BoardServiceImpl(BoardDAO bdao){ // (BoardDAO bDao) 만들어진 객체를 받아서 넣는다
+  		this.bDAO = bDAO;
+  	}
+  }
