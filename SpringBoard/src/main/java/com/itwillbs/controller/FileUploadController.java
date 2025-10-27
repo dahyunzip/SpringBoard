@@ -1,6 +1,9 @@
 package com.itwillbs.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -9,13 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import net.coobird.thumbnailator.Thumbnails;
 
 @Controller
 public class FileUploadController {
@@ -36,7 +45,8 @@ public class FileUploadController {
 	
 	// 파일 업로드 정보를 처리 - POST
 	@RequestMapping(value="/upload", method=RequestMethod.POST)
-	public String fileUploadPOST(MultipartHttpServletRequest multiRequest) throws Exception{
+	public String fileUploadPOST(Model model,
+							    MultipartHttpServletRequest multiRequest) throws Exception{
 		logger.info(" 폼태그 submit -> fileUploadPost() 실행 ");
 		
 		// 한글처리 인코딩 
@@ -65,9 +75,16 @@ public class FileUploadController {
 		logger.info("pramMap : {}", paramMap);
 		
 		// 파일 업로드
-		fileUploadProcess(multiRequest);
+		List<String> fileList =  fileUploadProcess(multiRequest);
 		
-		return "";
+		paramMap.put("fileList", fileList);
+		
+		// (미구현 기능) DB에 저장하는 기능
+		
+		model.addAttribute("paramMap",paramMap);
+		// 리스트나 컬렉션은 이름을 정해주는게 좋다.
+		
+		return "/result"; // 뷰페이지(/views/result.jsp) 결정
 	}
 	
 	private List<String> fileUploadProcess(MultipartHttpServletRequest multiRequest) throws Exception{
@@ -105,8 +122,10 @@ public class FileUploadController {
 			String oFileName =  Objects.requireNonNull(mFile.getOriginalFilename(), "업로드된 파일정보가 없음! ");
 			// 존재하면 mFile.getOriginalFilename() 리턴, 없으면 "업로드된 파일정보가 없음! "
 			
+			// 업로드할 파일의 이름 저장
 			fileList.add(oFileName);
-			
+
+			// 해당 이름의 빈파일 생성
 			File file = new File(UPLOAD_PATH + "\\" + oFileName);
 			
 			if(!file.exists()) {
@@ -123,9 +142,112 @@ public class FileUploadController {
 		}//while
 		
 		logger.info("fileList : " + fileList);
-		// 2) 업로드된 파일정보(이름)를 리턴
-		
-		return null;
-	}
 
-}
+		// 2) 업로드된 파일정보(이름)를 리턴
+		return fileList;
+	}// fileUploadProcess
+
+	 // 다운로드 - GET
+	// http://localhost:8088/download?fileName=f_site_close.png
+	@RequestMapping(value="/download", method=RequestMethod.GET)
+	public void fileDownloadGET(@RequestParam("fileName") String fileName,
+								HttpServletResponse response) throws Exception{
+								// response : 응답객체
+		logger.info("/download -> fileDownloadGET() 실행!");
+		
+		// 다운로드할 파일의 이름을 가져오기
+		logger.info(" fileName : " + fileName);
+		
+		// 1) 업로드해놓은 폴더에 접근, 2) 해당 파일을 찾아서 열기
+		// c:\\spring\\upload\\파일이름
+		// 1) File 이란게 생기면 접근이 가능해진다.
+		File downFile = new File(UPLOAD_PATH + "\\" + fileName);
+		
+		// 파일 다운로드 처리시 필요한 옵션
+		response.setHeader("Cache-Control", "no-cache");
+		
+		// 파일의 이름 정보를 인코딩(한글파일 처리)
+		String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
+		
+		// 모든 파일이 다운로드창 형태로 동작
+		response.addHeader("Content-disposition", "attachment; fileName=" +encodedFileName);
+		
+		// 파일의 내용을 다른 파일로 복사
+		// 파일 읽어오는 통로 
+		FileInputStream fis = new FileInputStream(downFile);
+		
+		// 파일 출력
+		// 내보내는 통로
+		OutputStream out = response.getOutputStream();
+
+		// 출력 버퍼 생성
+		byte[] buffer = new byte[1024 * 8]; // 8KB
+		
+		//while(true) {
+		//	int data = fis.read(buffer); //파일을 열어서 buffer 만큼씩 퍼서 읽을 것이다.
+		//	if(data == -1) break; // -1은 EOF(End Of File) 파일의 끝
+			
+			// 정보 출력
+		//	out.write(buffer, 0, data);
+		//}
+		int data = 0;
+		while((data = fis.read(buffer)) != -1) {
+			// 정보출력
+			out.write(buffer, 0, data);
+		}
+		
+		out.flush(); // 빈공간에 공백을 채워서 전달
+		
+		logger.info(" 파일 다운로드 끝! ");
+		fis.close();
+		out.close();
+	}
+	
+	// 다운로드(썸네일) - GET
+	// http://localhost:8088/thumbNail?fileName=f_site_close.png
+	@RequestMapping(value="/thumbNail", method=RequestMethod.GET)
+	public void thumbNailDownloadGET(@RequestParam("fileName") String fileName,
+								HttpServletResponse response) throws Exception{
+		logger.info("/download -> thumbNailDownloadGET() 실행!");
+		
+		// 다운로드할 파일의 이름을 가져오기
+		logger.info(" fileName : " + fileName);
+
+		// JAVA.txt에서 lastIndexOf가 끝부터 "."의 위치를 찾는다.
+		//int lastIndex = fileName.lastIndexOf(".");
+		//String thumbNailName = fileName.substring(0, lastIndex);
+		// => 파일에 확장자를 제외한 이름을 구할 수 있다.
+		
+		// 파일 출력
+		// 내보내는 통로
+		OutputStream out = response.getOutputStream();
+		
+		// 1) 업로드해놓은 폴더에 접근, 2) 해당 파일을 찾아서 열기
+		// c:\\spring\\upload\\파일이름
+		// 1) File 이란게 생기면 접근이 가능해진다.
+		File downFile = new File(UPLOAD_PATH + "\\" + fileName);
+		
+		// downFile.delete();
+				
+		// 파일의 내용을 다른 파일로 복사
+		// 파일 읽어오는 통로 
+		// FileInputStream fis = new FileInputStream(downFile);
+		
+		// 썸네일 파일 생성
+		//File thumbFile = new File(UPLOAD_PATH + "\\" + "thumbnail" + "\\" + thumbNailName+".png");
+		
+		if(downFile.exists()) {
+			// 다운파일이 존재한다면,
+			//thumbFile.getParentFile().mkdirs();
+			
+			// 썸네일 생성
+			//Thumbnails.of(downFile).size(50, 50).outputFormat("png").toFile(thumbFile);
+			Thumbnails.of(downFile).size(50, 50).outputFormat("png").toOutputStream(out);
+		}
+		
+		logger.info(" 파일 썸네일 생성 끝! ");
+		//fis.close();
+		out.close();
+	}
+	
+} // class

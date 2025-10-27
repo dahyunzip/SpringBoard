@@ -15,7 +15,7 @@
 		// addBtn 클릭시, fileDiv 영역에 input file을 생성(추가)
 		$("#addBtn").click(function(){
 			//alert("버튼 클릭!");
-			$("#fileDiv").append("<br> <input type='file' name='file"+ (cnt++)+"'>");
+			$("#fileDiv").append("<br> <input type='file' name='file"+ (cnt++)+"' accept='image/*'>");
 		})
 	})
 </script>
