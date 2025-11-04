@@ -48,6 +48,13 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
+	public List<BoardVO> selectBoardList5() throws Exception {
+		logger.info(" selectBoardList5() 실행 ");
+		logger.debug(" SQL 실행 완료 ");
+		return sqlSession.selectList(NAMESPACE+"selectBoardList5");
+	}
+
+	@Override
 	public List<BoardVO> selectBoardListPage(int page) throws Exception {
 		logger.debug(" selectBoardListPage(int page) 시작");
 		

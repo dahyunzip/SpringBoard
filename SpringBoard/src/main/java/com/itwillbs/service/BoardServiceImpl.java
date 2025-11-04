@@ -40,6 +40,13 @@ public class BoardServiceImpl implements BoardService {
 		// => 전달받은 정보를 있는 그대로 전달한다.
 	}
 	
+	
+	@Override
+	public List<BoardVO> getBoardList5() throws Exception {
+		logger.info(" getBoardList5() 실행 ");
+		return bDao.selectBoardList5();
+	}
+
 	// 게시판 모든 글정보를 가져오기 (리스트)
 	@Override
 	public List<BoardVO> getBoardListPage(Criteria cri) throws Exception {

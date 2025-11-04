@@ -17,6 +17,9 @@ public interface BoardDAO {
 	// 게시판 전체 글목록 조회
 	public List<BoardVO> selectBoardListALL() throws Exception;
 	
+	// 게시판 글목록 5개 조회
+	public List<BoardVO> selectBoardList5() throws Exception;
+
 	// 게시판 글목록 조회(페이징)
 	// 아래 두개는 없애도 됨!
 	public List<BoardVO> selectBoardListPage(int page) throws Exception;
