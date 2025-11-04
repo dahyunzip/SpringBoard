@@ -241,3 +241,29 @@ insert into tbl_board(title, writer, content)
   		this.bDAO = bDAO;
   	}
   }
+  
+   
+  
+  
+  ------------------------------------------------------
+  
+  
+  
+  * REST 방식 -> 게시판 URI설계( CRUD )
+  
+    [동작]		/	[HTTP 메서드]		 / [URI]
+  ------------------------------------------------------------------
+  게시판 글쓰기 / POST(추가,생성-Create) / [ /rest/regist + 데이터 ]
+  											=> [ /boards + 데이터 ]
+  
+  게시판 조회(list) / GET(조회 - Read)  /  [ /rest/listCri ]
+  게시판 조회(bno)	/ GET(조회 - Read)  /  [ /rest/read/{bno} ]
+  											=> [ /boards ] (list)
+  											=> [ /boards/{bno} ] (bno)
+  
+  게시판 수정  / PUT( (전체)수정- Update) / [ /rest/modify/{bno} + 데이터 ]
+               / PATCH( (부분)수정-Update )
+               								=> [ /boards/{bno} + 데이터 ]
+
+  게시판 삭제  / DELETE( 삭제 - Delete )/  [ /rest/remove/{bno} ]               
+  											=> [ /boards/{bno} ]

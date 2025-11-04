@@ -22,7 +22,7 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	
+	// http://localhost:8088/controller/ (x)
 	// http://localhost:8088/
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
@@ -35,7 +35,24 @@ public class HomeController {
 		
 		//model.addAttribute("serverTime", formattedDate );
 		
+		//return "home";
+		//return "redirect:/board/listALL";
 		return "redirect:/board/listCri";
 	}
+	
+	// REST동작 실행시작점
+	// http://localhost:8088/rest
+	@RequestMapping(value = "/rest",method = RequestMethod.GET)
+	public String restHome() throws Exception{
+		logger.info(" /rest -> restHome() 실행 ");
+		logger.info(" REST 동작을 수행! ");
+		
+		return "/restStart";
+	}
+	
+	
+	
+	
+	
 	
 }
