@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,7 +89,28 @@ public class BoardRestController {
 	}
 	
 	
+	// 게시판 수정  / PUT( (전체)수정- Update) / [ /boards/{bno} + 데이터 ]
+	@RequestMapping(value="/{bno}", method=RequestMethod.PUT)
+	public ResponseEntity<String> restModify(@PathVariable("bno") int bno,
+											 @RequestBody BoardVO vo) throws Exception{
+		logger.info(" restModify() 실행! ");
+		logger.info(" bno : " + bno);
+		logger.info(" vo : " + vo);
+		vo.setBno(bno); //@PathVariable로 전달된 번호를 vo객체에 저장
+		bService.boardModify(vo);
+		logger.info(" 글 정보 수정 완료! ");
+		return new ResponseEntity<String>("modifyOK", HttpStatus.OK);
+	}
 	
+	//  게시판 삭제  / DELETE( 삭제 - Delete )/  [ /boards/{bno} ]
+	@RequestMapping(value="/{bno}", method=RequestMethod.DELETE)
+	public ResponseEntity<Integer> restRemove(@PathVariable("bno") int bno) throws Exception{
+		logger.info(" restRemove() 실행! ");
+		logger.info(" bno : " + bno ) ;
+		Integer result = bService.boardRemove(bno);
+		logger.info("글 정보 삭제 완료!");
+		return new ResponseEntity<Integer>(result, HttpStatus.OK);
+	}
 	
 	
 }
